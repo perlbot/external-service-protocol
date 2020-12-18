@@ -1,0 +1,88 @@
+Glossary
+--------
+
+Client - The external service implementation, i.e. a bridge to Discord or Matrix
+Server - The main part of the bot itself, that implements all the plugins and manager etc.
+
+
+Types
+-------------
+
+1. Message
+    1. Incoming (Client -> Server)
+    2. Outgoing (Server -> Client)
+    3. Announcement (Client -> Server -> Client) i.e. the pastebin
+2. User State Change
+    1. Joined channel
+    2. Parted channel
+    3. Permissions changed
+    4. State change (Away, present, disconnected, etc.)
+3. Channel State Change
+    1. Topic change
+    2. Pinned message
+    3. Announcement changes (Allow, Disallow, etc.)
+4. Client/Server Introspection
+    1. Server Asks Client (Client gives channel list, server name, etc.)
+    2. Client Ask Server (Server gives connected client list, server names, etc.) i.e. mostly for the pastebin to automagically get channel lists
+    3. Server stats (Uptime, message rates, etc.0
+
+Type descriptions
+-----------------
+
+String - a utf8 encoded string
+Blob   - a blob of bytes (octets in this case), no defined encoding.
+Int    - 64bit signed integer
+UInt   - 64bit unsigned integer
+Time   - Uint representing unix time in milliseconds, always utc
+Array[T] - List of values of type T
+Dict{}   - Dictionary (aka hash, map, etc.)
+
+## Said object
+
+Dict {
+    * body
+      String
+      plain text version of what was said
+    
+    * who?
+      String
+      Network ID of the user who created the message
+    
+    * nick?
+      String
+      Human ID of the user who created the message, will be the same as who? much of the time
+    
+    * where?
+      String?
+      Network ID of the place the message happened
+    
+    * channel?
+      String
+      Human ID of the place the message happened
+  
+    * recommended_args
+      Array[String]
+      Pre-populated version of the arguments being given.  Most likely just split on spaces but some protocols may allow for more advanced handling, in particular a CLI or web interface to
+  the bot
+
+    * attachments
+      Array[
+        Dict{
+          * name
+            String
+            Filename of the attachment
+
+          * mime
+            String
+            Mimetype of the attachment, if present
+
+          * encoding
+            String
+            Name of the encoding, if present
+
+          * contents
+            Blob
+            likely a string in most languages, no defined encoding, must be able to represent non-utf8 data
+        }
+      ]
+}
